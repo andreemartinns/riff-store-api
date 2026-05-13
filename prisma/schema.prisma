@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
@@ -12,14 +12,9 @@ model User {
   name      String
   email     String   @unique
   password  String
-  role      Role     @default(CUSTOMER)
+  role      String   @default("CUSTOMER")
   createdAt DateTime @default(now())
   orders    Order[]
-}
-
-enum Role {
-  CUSTOMER
-  ADMIN
 }
 
 model Category {
@@ -33,7 +28,7 @@ model Product {
   name        String
   brand       String
   description String?
-  price       Decimal     @db.Decimal(10, 2)
+  price       Float
   stock       Int         @default(0)
   categoryId  Int
   createdAt   DateTime    @default(now())
@@ -44,20 +39,12 @@ model Product {
 model Order {
   id         Int         @id @default(autoincrement())
   userId     Int
-  status     OrderStatus @default(PENDING)
-  total      Decimal     @db.Decimal(10, 2)
+  status     String      @default("PENDING")
+  total      Float
   createdAt  DateTime    @default(now())
   updatedAt  DateTime    @updatedAt
   user       User        @relation(fields: [userId], references: [id])
   items      OrderItem[]
-}
-
-enum OrderStatus {
-  PENDING
-  CONFIRMED
-  SHIPPED
-  DELIVERED
-  CANCELLED
 }
 
 model OrderItem {
@@ -65,7 +52,7 @@ model OrderItem {
   orderId   Int
   productId Int
   quantity  Int
-  unitPrice Decimal @db.Decimal(10, 2)
+  unitPrice Float
   order     Order   @relation(fields: [orderId], references: [id])
   product   Product @relation(fields: [productId], references: [id])
 }
