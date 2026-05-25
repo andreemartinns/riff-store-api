@@ -50,6 +50,8 @@ export async function register(req, res) {
       user
     })
   } catch (error) {
+    console.log('REGISTER ERROR:', error)
+
     return res.status(500).json({
       message: 'Erro interno no servidor.'
     })
@@ -58,6 +60,8 @@ export async function register(req, res) {
 
 export async function login(req, res) {
   const { email, password } = req.body
+
+  console.log('LOGIN BODY:', req.body)
 
   if (!email || !password) {
     return res.status(400).json({
@@ -70,6 +74,8 @@ export async function login(req, res) {
       where: { email }
     })
 
+    console.log('USER FOUND:', user)
+
     if (!user) {
       return res.status(401).json({
         message: 'Credenciais inválidas.'
@@ -77,6 +83,8 @@ export async function login(req, res) {
     }
 
     const passwordMatch = await bcrypt.compare(password, user.password)
+
+    console.log('PASSWORD MATCH:', passwordMatch)
 
     if (!passwordMatch) {
       return res.status(401).json({
@@ -105,6 +113,8 @@ export async function login(req, res) {
       }
     })
   } catch (error) {
+    console.log('LOGIN ERROR:', error)
+
     return res.status(500).json({
       message: 'Erro interno no servidor.'
     })
