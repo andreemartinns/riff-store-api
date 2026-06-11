@@ -11,7 +11,9 @@ import orderRoutes from './routes/order.routes.js'
 
 const app = express()
 
-app.use(cors())
+app.use(cors({
+  origin: '*'
+}))
 app.use(express.json())
 
 app.use('/auth', authRoutes)
@@ -22,5 +24,5 @@ app.use('/orders', orderRoutes)
 const PORT = process.env.PORT || 3000
 
 app.listen(PORT, () => {
-  console.log(`🎸 Riff Store API rodando na porta ${PORT}`)
+  console.log(` Riff Store API rodando na porta ${PORT}`)
 })
